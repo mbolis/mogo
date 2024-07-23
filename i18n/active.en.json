@@ -1,0 +1,55 @@
+{
+  "Month": "Month",
+  "Day": "Day",
+  "Hour": "Hour",
+  "Phase": "Phase",
+  "Sign": "Sign",
+  "Haircut": "Haircut",
+  "Nails cut": "Nails cut",
+  "Epilation": "Epilation",
+  "Facial cleansing": "Facial cleansing",
+  "Face mask": "Face mask",
+  "month": {
+    "Jan": "Jan",
+    "Feb": "Feb",
+    "Mar": "Mar",
+    "Apr": "Apr",
+    "May": "May",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Aug",
+    "Sep": "Sep",
+    "Oct": "Oct",
+    "Nov": "Nov",
+    "Dec": "Dec"
+  },
+  "weekday": {
+    "Mon": "Mon",
+    "Tue": "Tue",
+    "Wed": "Wed",
+    "Thu": "Thu",
+    "Fri": "Fri",
+    "Sat": "Sat",
+    "Sun": "Sun"
+  },
+  "phase": {
+    "New": "New",
+    "Waxing": "Waxing",
+    "Full": "Full",
+    "Waning": "Waning"
+  },
+  "zodiac": {
+    "Aries": "Aries",
+    "Taurus": "Taurus",
+    "Gemini": "Gemini",
+    "Cancer": "Cancer",
+    "Leo": "Leo",
+    "Virgo": "Virgo",
+    "Libra": "Libra",
+    "Scorpio": "Scorpio",
+    "Sagittarius": "Sagittarius",
+    "Capricorn": "Capricorn",
+    "Aquarius": "Aquarius",
+    "Pisces": "Pisces"
+  }
+}
