@@ -6,11 +6,12 @@ import (
 	"strconv"
 
 	"github.com/mbolis/mogo/config"
+	"github.com/mbolis/mogo/template"
 	"github.com/xuri/excelize/v2"
 )
 
 func GenerateXLSX(cfg config.Config, days []Day, out io.Writer) {
-	tpl, err := excelize.OpenFile("template.xlsx")
+	tpl, err := excelize.OpenReader(template.XLSX())
 	if err != nil {
 		panic(err)
 	}

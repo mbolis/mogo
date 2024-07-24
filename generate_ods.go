@@ -9,7 +9,7 @@ import (
 )
 
 func GenerateODS(cfg config.Config, days []Day, out io.Writer) {
-	doc, err := ods.LoadFile("template.ods")
+	doc, err := ods.LoadTemplate()
 	if err != nil {
 		panic(err)
 	}

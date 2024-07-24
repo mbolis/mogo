@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
+	"github.com/mbolis/mogo/template"
 	"github.com/psanford/memfs"
 )
 
@@ -18,14 +19,13 @@ type Document struct {
 	xml *etree.Document
 }
 
-func LoadFile(filename string) (*Document, error) {
+func LoadTemplate() (*Document, error) {
 	fs := memfs.New()
 
-	files, err := zip.OpenReader(filename)
+	files, err := zip.NewReader(template.ODS())
 	if err != nil {
 		return nil, err
 	}
-	defer files.Close()
 
 	err = unzipInto(fs, files)
 	if err != nil {
@@ -40,7 +40,7 @@ func LoadFile(filename string) (*Document, error) {
 	return &Document{fs, doc}, nil
 }
 
-func unzipInto(fs *memfs.FS, files *zip.ReadCloser) error {
+func unzipInto(fs *memfs.FS, files *zip.Reader) error {
 	for _, f := range files.File {
 		if f.FileInfo().IsDir() {
 			err := fs.MkdirAll(strings.TrimRight(f.Name, "/"), os.ModePerm)
