@@ -22,7 +22,7 @@ const (
 	Neutral      Status = 0
 	Positive     Status = +1
 	VeryPositive Status = +2
-	Warning      Status = 11 // TODO use me!
+	Warning      Status = 11
 )
 
 func (e Entry) Haircut() Status {
@@ -49,8 +49,10 @@ func (e Entry) NailsCut() (status Status) {
 
 	switch e.Date.Weekday() {
 	case time.Friday:
-		// TODO introduce warning if previously negative
 		status++
+		if status == 0 {
+			return Warning
+		}
 	case time.Saturday:
 		status--
 	}
@@ -72,8 +74,10 @@ func (e Entry) Epilation() (status Status) {
 			status++
 		}
 	case sign.Leo, sign.Virgo:
-		// TODO introduce warning if previously positive
 		status--
+		if status == 0 {
+			return Warning
+		}
 	}
 
 	return

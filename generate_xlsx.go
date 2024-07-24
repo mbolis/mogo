@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"strconv"
 
@@ -31,53 +32,73 @@ func GenerateXLSX(cfg config.Config, days []Day, out io.Writer) {
 		sourceRow := 3 - i%2 // odd=2 even=3
 
 		for _, r := range d.Rows(cfg) {
-			targetCellRow := strconv.Itoa(appendRowIndex)
+			mustDuplicateRowTo(tpl, "Sheet1", sourceRow, appendRowIndex)
 
-			err = tpl.DuplicateRowTo("Sheet1", sourceRow, appendRowIndex)
-			if err != nil {
-				panic(err)
-			}
-
-			// TODO handle / panic on all errors
-			tpl.SetCellValue("Sheet1", "A"+targetCellRow, r.Date)
-			tpl.SetCellValue("Sheet1", "B"+targetCellRow, r.Date)
+			mustSetCellValue(tpl, "Sheet1", appendRowIndex, 0, r.Date)
+			mustSetCellValue(tpl, "Sheet1", appendRowIndex, 1, r.Date)
 			if !r.Time.IsZero() {
-				tpl.SetCellValue("Sheet1", "C"+targetCellRow, r.Time)
+				mustSetCellValue(tpl, "Sheet1", appendRowIndex, 2, r.Time)
 			}
 
 			phaseIcon, phaseName := r.PhaseText()
-			tpl.SetCellStr("Sheet1", "D"+targetCellRow, phaseIcon)
-			tpl.SetCellStr("Sheet1", "E"+targetCellRow, phaseName)
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 3, phaseIcon)
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 4, phaseName)
 
 			signIcon, signName := r.SignText()
-			tpl.SetCellStr("Sheet1", "F"+targetCellRow, signIcon)
-			tpl.SetCellStr("Sheet1", "G"+targetCellRow, signName)
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 5, signIcon)
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 6, signName)
 
-			tpl.SetCellStr("Sheet1", "H"+targetCellRow, r.HaircutIcon())
-			tpl.SetCellStr("Sheet1", "I"+targetCellRow, r.NailsCutIcon())
-			tpl.SetCellStr("Sheet1", "J"+targetCellRow, r.EpilationIcon())
-			tpl.SetCellStr("Sheet1", "K"+targetCellRow, r.FacialCleansingIcon())
-			tpl.SetCellStr("Sheet1", "L"+targetCellRow, r.FaceMaskIcon())
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 7, r.HaircutIcon())
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 8, r.NailsCutIcon())
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 9, r.EpilationIcon())
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 10, r.FacialCleansingIcon())
+			mustSetCellStr(tpl, "Sheet1", appendRowIndex, 11, r.FaceMaskIcon())
 
 			appendRowIndex++
 		}
 	}
 
-	err = tpl.RemoveRow("Sheet1", 2)
-	if err != nil {
-		panic(err)
-	}
-	err = tpl.RemoveRow("Sheet1", 2)
-	if err != nil {
-		panic(err)
-	}
+	mustRemoveRow(tpl, "Sheet1", 2)
+	mustRemoveRow(tpl, "Sheet1", 2)
 
-	err = tpl.SetSheetName("Sheet1", strconv.Itoa(cfg.Year))
-	if err != nil {
-		panic(err)
-	}
+	mustSetSheetName(tpl, "Sheet1", strconv.Itoa(cfg.Year))
 
 	err = tpl.Write(out)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func mustDuplicateRowTo(tpl *excelize.File, sheet string, src, dst int) {
+	err := tpl.DuplicateRowTo(sheet, src, dst)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func mustSetCellValue(tpl *excelize.File, sheet string, row, col int, value any) {
+	err := tpl.SetCellValue(sheet, fmt.Sprintf("%c%d", 'A'+col, row), value)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func mustSetCellStr(tpl *excelize.File, sheet string, row, col int, value string) {
+	err := tpl.SetCellStr(sheet, fmt.Sprintf("%c%d", 'A'+col, row), value)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func mustRemoveRow(tpl *excelize.File, sheet string, row int) {
+	err := tpl.RemoveRow(sheet, row)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func mustSetSheetName(tpl *excelize.File, sheet, name string) {
+	err := tpl.SetSheetName(sheet, name)
 	if err != nil {
 		panic(err)
 	}
