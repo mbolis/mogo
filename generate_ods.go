@@ -64,6 +64,9 @@ func GenerateODS(cfg config.Config, days []Day, out io.Writer) {
 
 	doc.SetWorksheetName(0, strconv.Itoa(cfg.Year))
 
+	// mark first row as header rows so LibreOffice repeats it on every page
+	doc.SetHeaderRows(1)
+
 	err = doc.Write(out)
 	if err != nil {
 		panic(err)

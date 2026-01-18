@@ -131,6 +131,32 @@ func (doc *Document) Write(out io.Writer) error {
 	return zip.AddFS(doc.fs)
 }
 
+// SetHeaderRows moves the first n table rows into a
+// table:table-header-rows element so they are treated as
+// repeating header rows by Calc/LibreOffice when printing
+// or exporting to PDF.
+func (doc *Document) SetHeaderRows(n int) {
+	sheets := doc.xml.FindElements("//table:table")
+	if len(sheets) == 0 || n <= 0 {
+		return
+	}
+
+	sheet := sheets[0]
+	rows := sheet.SelectElements("table:table-row")
+	if len(rows) < n {
+		return
+	}
+
+	hdr := etree.NewElement("table:table-header-rows")
+	for i := 0; i < n; i++ {
+		r := rows[i]
+		r.Parent().RemoveChild(r)
+		hdr.AddChild(r)
+	}
+
+	sheet.InsertChildAt(0, hdr)
+}
+
 type Row struct {
 	xml *etree.Element
 }
